@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContex } from "../contex/UserContex";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContex);
+  const navigate = useNavigate();
   return (
     <div className="navbar bg-neutral">
       <div className="navbar-start">
@@ -64,9 +68,20 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <a className="btn text-white bg-blue-500 hover:bg-blue-600 py-2">
-          Get started
-        </a>
+        {user?.uid ? (
+          <a className="btn text-white bg-blue-500 hover:bg-blue-600 py-2">
+            Get started
+          </a>
+        ) : (
+          <>
+            <button onClick={()=> navigate("/login")} className="btn text-white bg-blue-500 hover:bg-blue-600 py-2">
+              Login
+            </button>{" "}
+            <button onClick={()=> navigate("/register")} className="btn text-white bg-blue-500 hover:bg-blue-600 py-2">
+              Sign Up
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
