@@ -1,4 +1,6 @@
+import { getAuth } from "firebase/auth";
 import { createContext, useState } from "react";
+import app from "../firebase/firebase.config";
 
 export const AuthContex = createContext({});
 // export const useAuthContex = useContext(AuthContex);
@@ -8,7 +10,10 @@ const UserContex = ({ children }) => {
   const [user, setUser] = useState({
     name: "Abdur Rahim",
   });
-  const AuthInfo = { user, setUser };
+
+  const auth = getAuth(app);
+
+  const AuthInfo = { user, setUser, auth };
   return <AuthContex.Provider value={AuthInfo}>{children}</AuthContex.Provider>;
 };
 
