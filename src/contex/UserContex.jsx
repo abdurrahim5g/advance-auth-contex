@@ -3,6 +3,7 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import app from "../firebase/firebase.config";
@@ -26,18 +27,23 @@ const UserContex = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, pass);
   };
 
+  const logOut = () => {
+    return signOut(auth);
+  };
+
   useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        console.log("User signout");
-      }
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log("Authstate changed", currentUser);
     });
+
+    return () => {
+      unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const AuthInfo = { user, setUser, auth, SignUp, LoginWithPass };
+  const AuthInfo = { user, setUser, auth, SignUp, LoginWithPass, logOut };
 
   return <AuthContex.Provider value={AuthInfo}>{children}</AuthContex.Provider>;
 };
