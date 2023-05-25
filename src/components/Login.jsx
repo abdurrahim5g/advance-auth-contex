@@ -1,11 +1,13 @@
 import { useContext, useState } from "react";
 import { AuthContex } from "../contex/UserContex";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [error, setError] = useState("");
 
-  const { LoginWithPass, setUser } = useContext(AuthContex);
+  const { LoginWithPass } = useContext(AuthContex);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -23,8 +25,8 @@ const Login = () => {
       setError();
       LoginWithPass(email, pass)
         .then((result) => {
-          console.log(result);
-          setUser(result.user);
+          console.log(result.user);
+          navigate("/");
         })
         .catch((error) => {
           setError(error.code);
