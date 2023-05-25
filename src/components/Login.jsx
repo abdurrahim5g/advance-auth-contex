@@ -1,14 +1,17 @@
 import { useContext, useState } from "react";
 import { AuthContex } from "../contex/UserContex";
 import { Link, useNavigate } from "react-router-dom";
+import googleImage from "../assets/images/google.png";
+import { GoogleAuthProvider } from "firebase/auth";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
 
-  const { LoginWithPass } = useContext(AuthContex);
+  const { LoginWithPass, loginWithPopup } = useContext(AuthContex);
 
+  // login with email & password
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -33,6 +36,20 @@ const Login = () => {
           console.log(error.code);
         });
     }
+  };
+
+  // Login  with provider like [google,  facebook, twitter] etc
+  const googleProvider = new GoogleAuthProvider();
+
+  const handleLoginWithProvider = (provider) => {
+    loginWithPopup(provider)
+      .then(() => {
+        navigate("/");
+        setError();
+      })
+      .catch((err) => {
+        setError(err.code);
+      });
   };
 
   return (
@@ -107,6 +124,20 @@ const Login = () => {
             </Link>
           </span>
         </form>
+
+        <div className="divider">OR</div>
+
+        <div className="login-with-provider">
+          <div className="google w-3/4 mx-auto">
+            <button onClick={() => handleLoginWithProvider(googleProvider)}>
+              <img
+                src={googleImage}
+                alt="Continue with google"
+                className="h-16 object-contain"
+              />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

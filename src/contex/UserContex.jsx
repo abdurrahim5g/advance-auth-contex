@@ -3,6 +3,7 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
@@ -27,6 +28,10 @@ const UserContex = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, pass);
   };
 
+  const loginWithPopup = (provider) => {
+    return signInWithPopup(auth, provider);
+  };
+
   const logOut = () => {
     return signOut(auth);
   };
@@ -43,7 +48,15 @@ const UserContex = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const AuthInfo = { user, setUser, auth, SignUp, LoginWithPass, logOut };
+  const AuthInfo = {
+    user,
+    setUser,
+    auth,
+    SignUp,
+    LoginWithPass,
+    loginWithPopup,
+    logOut,
+  };
 
   return <AuthContex.Provider value={AuthInfo}>{children}</AuthContex.Provider>;
 };
